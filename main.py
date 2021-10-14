@@ -1,4 +1,4 @@
-from bs4 import BeautifulSoup
+ from bs4 import BeautifulSoup
 import requests
 import lxml # Used in BS4 on line 13
 import collections
