@@ -1,10 +1,12 @@
- from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 import requests
 import lxml # Used in BS4 on line 13
 import collections
 from collections import Counter #GeeksforGeeks
 import split
 import os
+posts = []
+
 
 
   # Stack overlow
@@ -67,6 +69,12 @@ while search != "Exit":
     print('----------------------------------------')
     print()      
     print("Most popular keywords: "+str(most_occur))
+
+  if "Filter" in search:
+    print("Choose filter option")
+    filter_type = input("Greatest to least or least to greatest")
+    
+
   
    
 
@@ -124,7 +132,9 @@ while search != "Exit":
   #post_link = soup.select("span .chart-element__information__artist  ")
   
   for item in soup.select('.Post'):
+
     try:
+     
         print()
         print('----------------------------------------')
 
@@ -133,10 +143,12 @@ while search != "Exit":
         print()
         print(f"Posted {item.select('._3jOxDPIQ0KaOWpzvSQo-1s')[0].get_text()}") # date posted
         print()
-        print(f"{item.select('._1rZYMD_4xY3gRcSS3p8ODO')[0].get_text()} upvotes") # number of upvotes
+        print(f"{item.select('._1rZYMD_4xY3gRcSS3p8ODO')[0].get_text()} Upvotes") # number of upvotes
         print(item.select('.FHCV02u6Cp2zYL0fhQPsO')[0].get_text()) # number of comments
         print()
         print(f"Link: {item.select('._3jOxDPIQ0KaOWpzvSQo-1s')[0]['href']}")	# Link to post
+    
+    
     except Exception as e:
         #raise e
         print('')
