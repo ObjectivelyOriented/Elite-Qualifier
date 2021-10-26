@@ -5,10 +5,37 @@ import collections
 from collections import Counter #GeeksforGeeks
 import split
 import os
-posts = []
+posts_upvotes = []
+filter_order = True
+
+def upvoteFilter(order):
+  
+  sorted_posts = sorted(posts_upvotes, key=lambda upvotes: upvotes[1], reverse=order)
+  final_list = [[x[0] for x in sorted_posts] , [x[1] for x in sorted_posts], [x[2] for x in sorted_posts], [x[3] for x in sorted_posts], [x[4] for x in sorted_posts]]
+  #print(final_list)
+
+  title = final_list[0]
+  upvotes_count = final_list[1]
+  date_post = final_list[2]
+  comment_number = final_list[3]
+  url = final_list[4]
+  
+
+  for i in range(len(sorted_posts)):
+    print()
+    print('----------------------------------------')
+    print(title[i])
+    print()
+    print(f"Posted {date_post[i]}")
+    print()
+    print(f"{upvotes_count[i]} upvotes")
+    print(f"{comment_number[i]}")
+    print()
+    print(f"Link: {url[i]}")
+    print()
 
 
-
+  
   # Stack overlow
 def clearConsole():
     command = 'clear'
@@ -41,7 +68,8 @@ print()
 
 print("Remember! You can scroll to the bottom of the console to search again")
 print()
-search = input("Search.... ")
+user_search = input("Search.... ")
+search = user_search.strip()
 print()
 
 while search != "Exit":
@@ -72,9 +100,17 @@ while search != "Exit":
 
   if "Filter" in search:
     print("Choose filter option")
-    filter_type = input("Greatest to least or least to greatest")
+    filter_type = input("Greatest to Least(G to L) or Least to Greatest(L to G): ")
+    if(filter_type == "G to L"):
+      filter_order = False
+      print("r/"+ search + ": Greatest to Least")
+    elif(filter_type == "L to G"):
+      filter_order = True
+      print("r/"+ search + ": Least to Greatest")
+   
+    modified_search = search.replace("/Filter", "")
+    url = f'https://www.reddit.com/r/' +str(modified_search) + '/' 
     
-
   
    
 
@@ -110,6 +146,9 @@ while search != "Exit":
     print("Example: typing 'aww/new' gets you all the new posts for the aww subreddit")
     print("Acceptable sortings are /new, /top, /hot and /rising")
     print()
+    print()
+    print("Type /Filter after any search to filter the posts in descending or ascending order based on their upvotes")
+    print()
     print("Remember! You can scroll to the bottom of the console to search again")
     print()
     url = "https://www.reddit.com/dss"
@@ -132,9 +171,17 @@ while search != "Exit":
   #post_link = soup.select("span .chart-element__information__artist  ")
   
   for item in soup.select('.Post'):
-
+   
     try:
-     
+        title = item.select('._eYtD2XCVieq6emjKBH3m')[0].get_text()
+        upvotes = item.select('._1rZYMD_4xY3gRcSS3p8ODO')[0].get_text()
+        post_date = item.select('._3jOxDPIQ0KaOWpzvSQo-1s')[0].get_text()
+        comment_count = item.select('.FHCV02u6Cp2zYL0fhQPsO')[0].get_text()
+        post_url = item.select('._3jOxDPIQ0KaOWpzvSQo-1s')[0]['href']
+        
+        
+        posts_upvotes.insert(0, (title, upvotes, post_date, comment_count, post_url))
+        """ 
         print()
         print('----------------------------------------')
 
@@ -143,17 +190,23 @@ while search != "Exit":
         print()
         print(f"Posted {item.select('._3jOxDPIQ0KaOWpzvSQo-1s')[0].get_text()}") # date posted
         print()
+        
         print(f"{item.select('._1rZYMD_4xY3gRcSS3p8ODO')[0].get_text()} Upvotes") # number of upvotes
+
         print(item.select('.FHCV02u6Cp2zYL0fhQPsO')[0].get_text()) # number of comments
         print()
         print(f"Link: {item.select('._3jOxDPIQ0KaOWpzvSQo-1s')[0]['href']}")	# Link to post
-    
+      """
     
     except Exception as e:
         #raise e
         print('')
+  upvoteFilter(filter_order)
+  
   print()
   print('----------------------------------------')
   search = input("Search.... ")
+  posts_upvotes = []
   clearConsole()
+
 print("Thanks for using Reddit Scrapper. Goodbye")
